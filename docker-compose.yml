@@ -1,0 +1,55 @@
+version: '2'
+services:
+    db-cbr:
+        container_name: db-cbr
+        image: mysql:8.0.22
+        command: ["--default-authentication-plugin=mysql_native_password"]
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: symfony
+            MYSQL_USER: symfony
+            MYSQL_PASSWORD: symfony
+        networks:
+            net_cbr:
+                ipv4_address: 172.210.1.10
+
+    php-fpm-cbr:
+        container_name: php-fpm-cbr
+        build:
+            context: ./docker/php-fpm
+            args:
+                ENABLE_PHP_XDEBUG: 0
+        volumes:
+            - ./symfony/cbr:/var/www/symfony
+        depends_on:
+            - db-cbr
+        networks:
+            net_cbr:
+                ipv4_address: 172.210.1.11
+                
+    nginx-cbr:
+        container_name: nginx-cbr
+        build: ./docker/nginx
+        depends_on:
+            - php-fpm-cbr
+        volumes:
+            - ./logs/nginx:/var/log/nginx
+            - ./symfony/cbr:/var/www/symfony
+        networks:
+            net_cbr:
+                ipv4_address: 172.210.1.12
+    memcached:
+        container_name: memcached
+        image: memcached:latest
+        networks:
+            net_cbr:
+                ipv4_address: 172.210.1.13
+
+networks:
+    net_cbr:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.210.1.0/24
+                  gateway: 172.210.1.1
