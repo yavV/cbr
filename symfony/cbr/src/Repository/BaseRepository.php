@@ -19,7 +19,6 @@ abstract class BaseRepository extends ServiceEntityRepository
 
     /**
      * @param $entity
-     * @param bool $flush
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */

@@ -6,9 +6,9 @@ namespace App\DTO;
 
 final class CurrencyExchangeRateDTO
 {
-    private int $numCode;
+    private int $numcode;
 
-    private string $charCode;
+    private string $charcode;
 
     private int $nominal;
 
@@ -19,33 +19,33 @@ final class CurrencyExchangeRateDTO
     /**
      * @return int
      */
-    public function getNumCode(): int
+    public function getNumcode(): int
     {
-        return $this->numCode;
+        return $this->numcode;
     }
 
     /**
-     * @param int $numCode
+     * @param int $numcode
      */
-    public function setNumCode(int $numCode): void
+    public function setNumcode(int $numcode): void
     {
-        $this->numCode = $numCode;
+        $this->numcode = $numcode;
     }
 
     /**
      * @return string
      */
-    public function getCharCode(): string
+    public function getCharcode(): string
     {
-        return $this->charCode;
+        return $this->charcode;
     }
 
     /**
-     * @param string $charCode
+     * @param string $charcode
      */
-    public function setCharCode(string $charCode): void
+    public function setCharcode(string $charcode): void
     {
-        $this->charCode = $charCode;
+        $this->charcode = $charcode;
     }
 
     /**

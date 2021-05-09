@@ -16,7 +16,7 @@ abstract class CacheProvider
         $this->cachePool = $cachePool;
     }
 
-    public function save(string $key, $value)
+    public function save(string $key, $value): void
     {
         $cacheItem = $this->getCacheItem($key);
         $cacheItem->set($value);

@@ -48,35 +48,32 @@ class ImportCurrenciesCommand extends Command
         $returnValue = 0;
 
         $currencies = $this->currencyRepository->findAll();
-
+var_dump($currencies);
         if (count($currencies) === 0){
             foreach ($currencies as $currency){
                 $this->currencyRepository->remove($currency);
             }
         }
 
-//        $newCurrencies = $this->currencyService->getCurrenciesVocabulary();
-        $newCurrencies = $this->currencyService->getCurrenciesExchangeRateForDate(new \DateTime());
-        var_dump($newCurrencies);
+        $newCurrencies = $this->currencyService->getCurrenciesVocabulary();
 
         $count = 0;
-//        /**
-//         * @var CurrencyDTO $newCurrency
-//         */
-//        foreach ($newCurrencies as $newCurrency){
-//            $currencyEntity = new Currency();
-//            $currencyEntity
-//                ->setName($newCurrency->getName())
-//                ->setEngName($newCurrency->getEngName())
-//                ->setNominal($newCurrency->getNominal())
-//                ->setIsoCharCode($newCurrency->getIsoCharCode())
-//                ->setIsoNumCode($newCurrency->getIsoNumCode())
-//            ;
-//            var_dump($currencyEntity);
-//            $this->currencyRepository->save($currencyEntity);
-//        $count++;
-//        }
-
+        /**
+         * @var CurrencyDTO $newCurrency
+         */
+        foreach ($newCurrencies as $newCurrency){
+            $currencyEntity = new Currency();
+            $currencyEntity
+                ->setName($newCurrency->getName())
+                ->setEngName($newCurrency->getEngName())
+                ->setNominal($newCurrency->getNominal())
+                ->setIsoCharCode($newCurrency->getIsoCharCode())
+                ->setIsoNumCode($newCurrency->getIsoNumCode())
+            ;
+            var_dump($currencyEntity);
+            $this->currencyRepository->save($currencyEntity);
+        $count++;
+        }
 
         echo "Imported - $count currencies\n";
 

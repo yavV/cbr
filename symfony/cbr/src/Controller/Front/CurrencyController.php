@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Class Currency
  * @package App\Controller\Front
  */
-class Currency extends AbstractController
+class CurrencyController extends AbstractController
 {
     /**
      * @Route("/")
