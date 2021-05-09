@@ -6,8 +6,6 @@ namespace App\DTO;
 
 final class CurrencyExchangeRateDTO
 {
-    private string $id;
-
     private int $numCode;
 
     private string $charCode;
@@ -17,22 +15,6 @@ final class CurrencyExchangeRateDTO
     private string $name;
 
     private float $value;
-
-    /**
-     * @return string
-     */
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     */
-    public function setId(string $id): void
-    {
-        $this->id = $id;
-    }
 
     /**
      * @return int

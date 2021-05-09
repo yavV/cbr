@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation\Type;
 
 /**
  * @ORM\MappedSuperclass
- * @ORM\HasLifecycleCallbacks
  */
 abstract class BaseEntity
 {
@@ -16,7 +15,7 @@ abstract class BaseEntity
      * @var int
      * @ORM\Id
      * @ORM\Column(type="bigint")
-     * @ORM\GeneratedValue()
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JMS\Expose()
      * @Type("int")
      */

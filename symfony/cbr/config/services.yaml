@@ -29,3 +29,16 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\HttpClient\CbrApiClientInterface: '@App\HttpClient\CbrApiClient'
+
+    App\HttpClient\CbrApiClient:
+        public: true
+        arguments:
+            $httpClient: '' #'@httplug.client.cbr_api'
+            $host: '%env(CBR_API_HOST)%'
+
+    App\Cache\CbrHttpClientCacheProvider:
+        public: true
+        arguments:
+            $cachePool: '@http.cache.cbr_request'

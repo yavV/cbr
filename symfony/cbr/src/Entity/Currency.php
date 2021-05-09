@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CurrencyRepository")
@@ -12,30 +13,75 @@ use Doctrine\ORM\Mapping as ORM;
  **/
 final class Currency extends BaseEntity
 {
-    private int $item_id;
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     * @Assert\NotBlank ()
+     */
+    private string $name;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     * @Assert\NotBlank ()
+     */
+    private string $eng_name;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=false)
+     * @Assert\NotBlank ()
+     */
     private int $nominal;
 
-    private string $parent_code;
-
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=false)
+     * @Assert\NotBlank ()
+     */
     private int $iso_num_code;
 
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     * @Assert\NotBlank ()
+     */
     private string $iso_char_code;
 
     /**
-     * @return int
+     * @return string
      */
-    public function getItemId(): int
+    public function getName(): string
     {
-        return $this->item_id;
+        return $this->name;
     }
 
     /**
-     * @param int $item_id
+     * @param string $name
+     * @return Currency
      */
-    public function setItemId(int $item_id): void
+    public function setName(string $name): Currency
     {
-        $this->item_id = $item_id;
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEngName(): string
+    {
+        return $this->eng_name;
+    }
+
+    /**
+     * @param string $eng_name
+     * @return Currency
+     */
+    public function setEngName(string $eng_name): Currency
+    {
+        $this->eng_name = $eng_name;
+        return $this;
     }
 
     /**
@@ -48,10 +94,12 @@ final class Currency extends BaseEntity
 
     /**
      * @param int $nominal
+     * @return Currency
      */
-    public function setNominal(int $nominal): void
+    public function setNominal(int $nominal): Currency
     {
         $this->nominal = $nominal;
+        return $this;
     }
 
     /**
@@ -64,10 +112,12 @@ final class Currency extends BaseEntity
 
     /**
      * @param string $parent_code
+     * @return Currency
      */
-    public function setParentCode(string $parent_code): void
+    public function setParentCode(string $parent_code): Currency
     {
         $this->parent_code = $parent_code;
+        return $this;
     }
 
     /**
@@ -80,10 +130,12 @@ final class Currency extends BaseEntity
 
     /**
      * @param int $iso_num_code
+     * @return Currency
      */
-    public function setIsoNumCode(int $iso_num_code): void
+    public function setIsoNumCode(int $iso_num_code): Currency
     {
         $this->iso_num_code = $iso_num_code;
+        return $this;
     }
 
     /**
@@ -96,9 +148,12 @@ final class Currency extends BaseEntity
 
     /**
      * @param string $iso_char_code
+     * @return Currency
      */
-    public function setIsoCharCode(string $iso_char_code): void
+    public function setIsoCharCode(string $iso_char_code): Currency
     {
         $this->iso_char_code = $iso_char_code;
+        return $this;
     }
+
 }

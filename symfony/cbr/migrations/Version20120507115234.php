@@ -17,7 +17,6 @@ CREATE TABLE currency (
     name varchar(255) NOT NULL,
     eng_name varchar(255) NOT NULL,
     nominal int NOT NULL,
-    parent_code varchar(6) NOT NULL,
     iso_num_code int NOT NULL,
     iso_char_code varchar(3) NOT NULL,
     PRIMARY KEY (id)
