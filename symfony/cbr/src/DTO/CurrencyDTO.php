@@ -33,22 +33,6 @@ final class CurrencyDTO
     }
 
     /**
-     * @return string
-     */
-    public function getParentCode(): string
-    {
-        return $this->parent_code;
-    }
-
-    /**
-     * @param string $parent_code
-     */
-    public function setParentCode(string $parent_code): void
-    {
-        $this->parent_code = $parent_code;
-    }
-
-    /**
      * @return int
      */
     public function getIsoNumCode(): int

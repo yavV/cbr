@@ -7,6 +7,7 @@ namespace App\Controller\Api;
 use App\DTO\CurrencyExchangeRateDTO;
 use App\Entity\Currency;
 use App\Service\CurrencyService;
+use DateTime;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\Annotations\Route;
@@ -40,14 +41,15 @@ class CurrencyExchangeRateController extends AbstractFOSRestController
      */
     public function getByCurrencyAndDate(Currency $currency, string $date)
     {
-        $dateTime = \DateTime::createFromFormat('Y-m-d', $date);
+        $dateTime = DateTime::createFromFormat('Y-m-d', $date);
 
-        $currencyExchangeRate = $this->currencyService->getCurrencyExchangeRateForDate($dateTime, $currency->getIsoCharCode());
+        $currencyExchangeRate = $this->currencyService->getCurrencyExchangeRateForDate($dateTime,
+            $currency->getIsoCharCode());
 
-        if ($currencyExchangeRate === null){
+        if ($currencyExchangeRate === null) {
             return new JsonResponse(['error' => 'Котировка не найдена']);
         }
 
-        return new JsonResponse(['exchangeRate'=>$currencyExchangeRate->getValue()]);
+        return new JsonResponse(['exchangeRate' => $currencyExchangeRate->getValue()]);
     }
 }

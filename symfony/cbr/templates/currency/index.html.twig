@@ -1,0 +1,27 @@
+<!DOCTYPE>
+<html>
+<head>
+    <script type="text/javascript" src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('js/currency-exchange-rate.js') }}"></script>
+</head>
+<body>
+<div>
+    <label for="currency">Выберите валюту</label>
+    <select id="currency">
+        {% for currency in currencies %}
+            <option value="{{ currency.id }}">{{ currency.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="date">Дата:</label>
+    <input type="date" id="date" name="date">
+
+    <button onclick="getCurrencyExchangeRate(this); return false;">Получить котировку</button>
+</div>
+
+<div>
+    <p id="info_text"></p>
+</div>
+
+</body>
+</html>

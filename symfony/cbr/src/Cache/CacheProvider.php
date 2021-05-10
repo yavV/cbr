@@ -16,6 +16,11 @@ abstract class CacheProvider
         $this->cachePool = $cachePool;
     }
 
+    /**
+     * @param string $key
+     * @param $value
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function save(string $key, $value): void
     {
         $cacheItem = $this->getCacheItem($key);
@@ -23,21 +28,39 @@ abstract class CacheProvider
         $this->cachePool->save($cacheItem);
     }
 
+    /**
+     * @param string $key
+     * @return mixed
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function get(string $key)
     {
         return $this->getCacheItem($key)->get();
     }
 
-    private function getCacheItem($key): CacheItem
+    /**
+     * @param string $key
+     * @return CacheItem
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
+    private function getCacheItem(string $key): CacheItem
     {
         return $this->cachePool->getItem($key);
     }
 
+    /**
+     * @param string $key
+     */
     public function delete(string $key): void
     {
         $this->cachePool->delete($key);
     }
 
+    /**
+     * @param string $key
+     * @return bool
+     * @throws \Psr\Cache\InvalidArgumentException
+     */
     public function isHit(string $key): bool
     {
         return $this->getCacheItem($key)->isHit();

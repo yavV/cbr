@@ -29,9 +29,9 @@ abstract class AbstractApiClient
      * AbstractApiClient constructor.
      *
      * @param ArrayTransformerInterface $transformer
-     * @param HttpClient                $httpClient
-     * @param MessageFactory            $messageFactory
-     * @param string                    $host
+     * @param HttpClient $httpClient
+     * @param MessageFactory $messageFactory
+     * @param string $host
      */
     public function __construct(
         ArrayTransformerInterface $transformer,
@@ -48,7 +48,7 @@ abstract class AbstractApiClient
     /**
      * @param            $method
      * @param            $path
-     * @param array      $query
+     * @param array $query
      *
      * @return RequestInterface
      */
@@ -56,7 +56,8 @@ abstract class AbstractApiClient
     {
         $uri = (new Uri($this->host))
             ->withPath($path)
-            ->withQuery(http_build_query($query));
+            ->withQuery(http_build_query($query))
+        ;
 
         $body = null;
         $headers = [];
@@ -91,7 +92,7 @@ abstract class AbstractApiClient
         if (null !== $validation) {
             $xsdContent = $validation->getBody()->getContents();
 
-            if (!$xml->schemaValidateSource($xsdContent)){
+            if (!$xml->schemaValidateSource($xsdContent)) {
                 return null;
             }
         }
@@ -100,16 +101,17 @@ abstract class AbstractApiClient
 
         $elementsArray = [];
 
-        foreach ($elements as $element){
+        foreach ($elements as $element) {
             $elementArray = [];
-            if($element->childNodes->length) {
-                foreach($element->childNodes as $childNode) {
+            if ($element->childNodes->length) {
+                foreach ($element->childNodes as $childNode) {
                     $elementArray[strtolower($childNode->nodeName)] = $childNode->nodeValue;
                 }
             }
 
             $elementsArray[] = $elementArray;
         }
+
         return count($elementsArray) > 0 ? $this->transformer->fromArray($elementsArray, $deserializationType) : null;
     }
 
@@ -132,8 +134,7 @@ abstract class AbstractApiClient
         array $query = [],
         $deserializationType = 'array',
         $deserializationElements = null
-    )
-    {
+    ) {
         $request = $this->createRequest($method, $path, $query);
 
         $response = $this->httpClient->sendRequest($request);

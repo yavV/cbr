@@ -48,9 +48,9 @@ class ImportCurrenciesCommand extends Command
         $returnValue = 0;
 
         $currencies = $this->currencyRepository->findAll();
-var_dump($currencies);
-        if (count($currencies) === 0){
-            foreach ($currencies as $currency){
+
+        if (count($currencies) > 0) {
+            foreach ($currencies as $currency) {
                 $this->currencyRepository->remove($currency);
             }
         }
@@ -58,10 +58,11 @@ var_dump($currencies);
         $newCurrencies = $this->currencyService->getCurrenciesVocabulary();
 
         $count = 0;
+
         /**
          * @var CurrencyDTO $newCurrency
          */
-        foreach ($newCurrencies as $newCurrency){
+        foreach ($newCurrencies as $newCurrency) {
             $currencyEntity = new Currency();
             $currencyEntity
                 ->setName($newCurrency->getName())
@@ -70,14 +71,13 @@ var_dump($currencies);
                 ->setIsoCharCode($newCurrency->getIsoCharCode())
                 ->setIsoNumCode($newCurrency->getIsoNumCode())
             ;
-            var_dump($currencyEntity);
             $this->currencyRepository->save($currencyEntity);
-        $count++;
+
+            $count++;
         }
 
         echo "Imported - $count currencies\n";
 
         return $returnValue;
     }
-
 }

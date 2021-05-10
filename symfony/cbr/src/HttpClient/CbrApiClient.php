@@ -23,6 +23,11 @@ final class CbrApiClient extends AbstractApiClient implements CbrApiClientInterf
         parent::__construct($transformer, $httpClient, $messageFactory, $host);
     }
 
+    /**
+     * @return CurrencyDTO[]|null
+     * @throws \Http\Client\Exception
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
     public function getCurrenciesVocabulary(): ?array
     {
         return $this->process(
@@ -35,9 +40,14 @@ final class CbrApiClient extends AbstractApiClient implements CbrApiClientInterf
         );
     }
 
+    /**
+     * @param DateTimeInterface $dateTime
+     * @return CurrencyExchangeRateDTO[]|null
+     * @throws \Http\Client\Exception
+     * @throws \Psr\Http\Client\ClientExceptionInterface
+     */
     public function getCurrenciesExchangeRateForDate(DateTimeInterface $dateTime): ?array
     {
-        //TODO validationPath должен быть 'StaticHtml/File/92172/ValCurs.xsd', но валидацию не проходит по полю Date, надо разбираться
         return $this->process(
             Request::METHOD_GET,
             'scripts/XML_daily.asp',

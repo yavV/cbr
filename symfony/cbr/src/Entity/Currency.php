@@ -103,24 +103,6 @@ final class Currency extends BaseEntity
     }
 
     /**
-     * @return string
-     */
-    public function getParentCode(): string
-    {
-        return $this->parent_code;
-    }
-
-    /**
-     * @param string $parent_code
-     * @return Currency
-     */
-    public function setParentCode(string $parent_code): Currency
-    {
-        $this->parent_code = $parent_code;
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getIsoNumCode(): int
