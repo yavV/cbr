@@ -3,6 +3,6 @@ framework:
         default_memcached_provider: 'memcached://%env(MEMCACHED_HOST)%:%env(MEMCACHED_PORT)%'
         pools:
             http.cache.cbr_request:
-                adapter: cache.adapter.array
+                adapter: cache.adapter.memcached
                 public: false
                 default_lifetime: 86400

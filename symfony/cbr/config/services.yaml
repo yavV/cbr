@@ -35,7 +35,7 @@ services:
     App\HttpClient\CbrApiClient:
         public: true
         arguments:
-            $httpClient: '' #'@httplug.client.cbr_api'
+            $httpClient: '@httplug.client.cbr_api'
             $host: '%env(CBR_API_HOST)%'
 
     App\Cache\CbrHttpClientCacheProvider:

@@ -50,24 +50,11 @@ abstract class CacheProvider
 
     /**
      * @param string $key
-     */
-    public function delete(string $key): void
-    {
-        $this->cachePool->delete($key);
-    }
-
-    /**
-     * @param string $key
      * @return bool
      * @throws \Psr\Cache\InvalidArgumentException
      */
     public function isHit(string $key): bool
     {
         return $this->getCacheItem($key)->isHit();
-    }
-
-    public function clear(): void
-    {
-        $this->cachePool->clear();
     }
 }

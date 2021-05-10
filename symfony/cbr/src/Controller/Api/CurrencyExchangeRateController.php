@@ -43,13 +43,16 @@ class CurrencyExchangeRateController extends AbstractFOSRestController
     {
         $dateTime = DateTime::createFromFormat('Y-m-d', $date);
 
-        $currencyExchangeRate = $this->currencyService->getCurrencyExchangeRateForDate($dateTime,
+        $currencyExchangeRates = $this->currencyService->getCurrencyExchangeRatesForDate($dateTime,
             $currency->getIsoCharCode());
 
-        if ($currencyExchangeRate === null) {
-            return new JsonResponse(['error' => 'Котировка не найдена']);
+        if ($currencyExchangeRates === null) {
+            return new JsonResponse(['error' => 'Котировки не найдены']);
         }
 
-        return new JsonResponse(['exchangeRate' => $currencyExchangeRate->getValue()]);
+        return new JsonResponse([
+            'currentExchangeRate' => $currencyExchangeRates[0]->getValue(),
+            'previousExchangeRate' => $currencyExchangeRates[1]->getValue()
+            ]);
     }
 }

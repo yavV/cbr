@@ -26,6 +26,7 @@ RUN apk add --no-cache \
     php8-zip \
     php8-xmlwriter \
     php8-pecl-apcu \
+    php8-pecl-memcached \
     make \
     curl
 
