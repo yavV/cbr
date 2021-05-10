@@ -6,6 +6,7 @@ namespace App\Controller\Api;
 
 use App\DTO\CurrencyExchangeRateDTO;
 use App\Repository\CurrencyRepository;
+use App\Request\CurrencyExchangeRateRequest;
 use App\Service\CurrencyService;
 use DateTime;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -38,31 +39,26 @@ class CurrencyExchangeRateController extends AbstractFOSRestController
 
     /**
      * @Rest\Post("/exchange-rate-by-date")
-     * @ParamConverter("request", class="array", converter="fos_rest.request_body")
-     * @param array $request
+     * @ParamConverter("currencyExchangeRateRequest", class="App\Request\CurrencyExchangeRateRequest", converter="fos_rest.request_body")
      * @return CurrencyExchangeRateDTO|JsonResponse
      */
-    public function getByCurrencyAndDate(array $request)
+    public function getByCurrencyAndDate(CurrencyExchangeRateRequest $currencyExchangeRateRequest)
     {
-        $currency = $this->currencyRepository->findOneBy(['id' => $request['currency']]);
+        $currency = $this->currencyRepository->findOneBy(['id' => $currencyExchangeRateRequest->getCurrency()]);
 
-        if ($currency === null){
+        if ($currency === null) {
             return new JsonResponse(['error' => 'Валюта не найдена']);
         }
 
-        $currencyBase = $this->currencyRepository->findOneBy(['id' => $request['currencyBase']]);
+        $currencyBase = $this->currencyRepository->findOneBy(['id' => $currencyExchangeRateRequest->getCurrencyBase()]);
 
-        if ($currencyBase === null){
+        if ($currencyBase === null) {
             return new JsonResponse(['error' => 'Базовая валюта не найдена']);
         }
 
-        $dateTime = DateTime::createFromFormat('Y-m-d', $request['date']);
+        $date = DateTime::createFromFormat(DATE_ATOM, $currencyExchangeRateRequest->getDate()->format(DATE_ATOM));
 
-        if ($dateTime === null){
-            return new JsonResponse(['error' => 'Не верный формат даты']);
-        }
-
-        $currencyExchangeRates = $this->currencyService->getCurrencyExchangeRatesForDate($dateTime,
+        $currencyExchangeRates = $this->currencyService->getCurrencyExchangeRatesForDate($date,
             $currency, $currencyBase);
 
         if ($currencyExchangeRates === null) {
@@ -72,6 +68,6 @@ class CurrencyExchangeRateController extends AbstractFOSRestController
         return new JsonResponse([
             'currentExchangeRate' => $currencyExchangeRates[0]->getValue(),
             'previousExchangeRate' => $currencyExchangeRates[1]->getValue()
-            ]);
+        ]);
     }
 }
