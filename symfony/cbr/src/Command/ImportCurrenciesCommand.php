@@ -63,6 +63,9 @@ class ImportCurrenciesCommand extends Command
          * @var CurrencyDTO $newCurrency
          */
         foreach ($newCurrencies as $newCurrency) {
+            if ($newCurrency->getIsoNumCode() === 0){
+                continue;
+            }
             $currencyEntity = new Currency();
             $currencyEntity
                 ->setName($newCurrency->getName())
@@ -75,6 +78,18 @@ class ImportCurrenciesCommand extends Command
 
             $count++;
         }
+
+        $currencyEntity = new Currency();
+        $currencyEntity
+            ->setName('Российский рубль')
+            ->setEngName('Russian ruble')
+            ->setNominal(1)
+            ->setIsoCharCode('RUR')
+            ->setIsoNumCode(810)
+        ;
+        $this->currencyRepository->save($currencyEntity);
+
+        $count++;
 
         echo "Imported - $count currencies\n";
 

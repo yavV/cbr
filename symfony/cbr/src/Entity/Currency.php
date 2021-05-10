@@ -137,5 +137,4 @@ final class Currency extends BaseEntity
         $this->iso_char_code = $iso_char_code;
         return $this;
     }
-
 }

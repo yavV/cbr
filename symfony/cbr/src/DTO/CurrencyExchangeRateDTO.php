@@ -14,7 +14,7 @@ final class CurrencyExchangeRateDTO
 
     private string $name;
 
-    private float $value;
+    private int $value;
 
     /**
      * @return int
@@ -81,17 +81,17 @@ final class CurrencyExchangeRateDTO
     }
 
     /**
-     * @return float
+     * @return int
      */
-    public function getValue(): float
+    public function getValue(): int
     {
         return $this->value;
     }
 
     /**
-     * @param float $value
+     * @param int $value
      */
-    public function setValue(float $value): void
+    public function setValue(int $value): void
     {
         $this->value = $value;
     }

@@ -57,4 +57,9 @@ abstract class CacheProvider
     {
         return $this->getCacheItem($key)->isHit();
     }
+
+    public function clear(): void
+    {
+        $this->cachePool->clear();
+    }
 }

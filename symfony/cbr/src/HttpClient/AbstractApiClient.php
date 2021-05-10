@@ -105,7 +105,11 @@ abstract class AbstractApiClient
             $elementArray = [];
             if ($element->childNodes->length) {
                 foreach ($element->childNodes as $childNode) {
-                    $elementArray[strtolower($childNode->nodeName)] = str_replace(',', '.', $childNode->nodeValue);
+                    if ($childNode->nodeName === 'Value'){
+                        $elementArray[strtolower($childNode->nodeName)] = str_replace(',', '', $childNode->nodeValue);
+                        continue;
+                    }
+                    $elementArray[strtolower($childNode->nodeName)] = $childNode->nodeValue;
                 }
             }
 

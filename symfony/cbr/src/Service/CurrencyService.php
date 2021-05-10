@@ -6,6 +6,8 @@ namespace App\Service;
 
 use App\Cache\CbrHttpClientCacheProvider;
 use App\DTO\CurrencyExchangeRateDTO;
+use App\Entity\Currency;
+use App\Enum\CurrencyEnum;
 use App\HttpClient\CbrApiClientInterface;
 use DateTimeInterface;
 
@@ -36,34 +38,53 @@ class CurrencyService
 
     /**
      * @param DateTimeInterface $dateTime
-     * @param string $currencyCode
+     * @param Currency $currency
+     * @param Currency $currencyBase
      * @return CurrencyExchangeRateDTO[]|null
      */
     public function getCurrencyExchangeRatesForDate(
         DateTimeInterface $dateTime,
-        string $currencyCode
+        Currency $currency,
+        Currency $currencyBase
     ): ?array {
-        $currentCurrencyExchangeRate = $this->getCurrencyExchangeRateForDate($dateTime, $currencyCode);
+        $currentCurrencyExchangeRate = $this->getCurrencyExchangeRateForDate($dateTime, $currency);
 
         $dateTime->modify('-1 day');
 
-        $previousCurrencyExchangeRate = $this->getCurrencyExchangeRateForDate($dateTime, $currencyCode);
+        $previousCurrencyExchangeRate = $this->getCurrencyExchangeRateForDate($dateTime, $currency);
 
         if ($currentCurrencyExchangeRate === null || $previousCurrencyExchangeRate === null) {
             return null;
         }
 
-        return [$currentCurrencyExchangeRate, $previousCurrencyExchangeRate];
+        if ($currencyBase->getIsoCharCode() === CurrencyEnum::RUBLE) {
+            return [$currentCurrencyExchangeRate, $previousCurrencyExchangeRate];
+        }
+
+        $currentCurrencyBaseExchangeRate = $this->getCurrencyExchangeRateForDate($dateTime, $currencyBase);
+
+        $dateTime->modify('-1 day');
+
+        $previousCurrencyBaseExchangeRate = $this->getCurrencyExchangeRateForDate($dateTime, $currencyBase);
+
+        if ($currentCurrencyBaseExchangeRate === null || $previousCurrencyBaseExchangeRate === null) {
+            return null;
+        }
+
+        return [
+            $this->getCrossRate($currentCurrencyExchangeRate, $currentCurrencyBaseExchangeRate),
+            $this->getCrossRate($previousCurrencyExchangeRate, $previousCurrencyBaseExchangeRate)
+        ];
     }
 
     /**
      * @param DateTimeInterface $dateTime
-     * @param string $currencyCode
+     * @param Currency $currency
      * @return CurrencyExchangeRateDTO|null
      */
     private function getCurrencyExchangeRateForDate(
         DateTimeInterface $dateTime,
-        string $currencyCode
+        Currency $currency
     ): ?CurrencyExchangeRateDTO {
         $cacheKey = sprintf('%s_%s', 'currenciesExchangeRate', md5($dateTime->format('d/m/Y')));
 
@@ -75,8 +96,8 @@ class CurrencyService
         }
 
         $currencyExchangeRate = array_filter($currenciesExchangeRate,
-            static function ($currencyExchangeRate) use ($currencyCode) {
-                return $currencyExchangeRate->getCharcode() === $currencyCode;
+            static function ($currencyExchangeRate) use ($currency) {
+                return $currencyExchangeRate->getCharcode() === $currency->getIsoCharCode();
             });
 
         if (count($currencyExchangeRate) === 0) {
@@ -84,5 +105,21 @@ class CurrencyService
         }
 
         return array_shift($currencyExchangeRate);
+    }
+
+    /**
+     * @param CurrencyExchangeRateDTO $currencyExchangeRate
+     * @param CurrencyExchangeRateDTO $currencyBaseExchangeRate
+     * @return CurrencyExchangeRateDTO
+     */
+    private function getCrossRate(
+        CurrencyExchangeRateDTO $currencyExchangeRate,
+        CurrencyExchangeRateDTO $currencyBaseExchangeRate
+    ): CurrencyExchangeRateDTO {
+        $newValue = (int)(($currencyExchangeRate->getValue() / $currencyBaseExchangeRate->getValue()) * 10000);
+
+        $currencyExchangeRate->setValue($newValue);
+
+        return $currencyExchangeRate;
     }
 }

@@ -13,14 +13,25 @@
         {% endfor %}
     </select>
 
+    <label for="currency">Выберите базовую валюту</label>
+    <select id="currencyBase">
+        {% for currency in currencies %}
+            {% set selected = '' %}
+            {% if currency.name is same as('RUR') %}
+                {% set selected = 'selected' %}
+            {% endif %}
+            <option value="{{ currency.id }}" {{ selected }}>{{ currency.name }}</option>
+        {% endfor %}
+    </select>
+
     <label for="date">Дата:</label>
     <input type="date" id="date" name="date">
 
-    <button onclick="getCurrencyExchangeRate(this); return false;">Получить котировку</button>
+    <button onclick="getCurrenciesExchangeRate(this); return false;">Получить курс</button>
 </div>
 
 <div>
-    <p id="info_text"></p>
+    <p id="infoText"></p>
 </div>
 
 </body>

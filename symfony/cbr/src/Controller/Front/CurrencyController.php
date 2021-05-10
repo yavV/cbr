@@ -43,7 +43,7 @@ class CurrencyController extends AbstractController
              * @var Currency $currencyEntity
              */
             foreach ($currenciesEntity as $currencyEntity) {
-                $currency = ['id' => $currencyEntity->getId(), 'name' => $currencyEntity->getName()];
+                $currency = ['id' => $currencyEntity->getId(), 'name' => $currencyEntity->getIsoCharCode()];
                 $currencies[] = $currency;
             }
         }

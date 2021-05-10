@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Api;
 
 use App\DTO\CurrencyExchangeRateDTO;
-use App\Entity\Currency;
+use App\Repository\CurrencyRepository;
 use App\Service\CurrencyService;
 use DateTime;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
@@ -23,28 +23,47 @@ class CurrencyExchangeRateController extends AbstractFOSRestController
 {
     private CurrencyService $currencyService;
 
+    private CurrencyRepository $currencyRepository;
+
     /**
      * CurrencyExchangeRateController constructor.
      * @param CurrencyService $currencyService
+     * @param CurrencyRepository $currencyRepository
      */
-    public function __construct(CurrencyService $currencyService)
+    public function __construct(CurrencyService $currencyService, CurrencyRepository $currencyRepository)
     {
         $this->currencyService = $currencyService;
+        $this->currencyRepository = $currencyRepository;
     }
 
     /**
-     * @Rest\Get("/exchange-rate-by-date/{id}/{date}", requirements={"id": "\d+", "date": "(19|20)[0-9][0-9]-[0-9][0-9]-[0-9][0-9]"})
-     * @ParamConverter("Currency", class="App\Entity\Currency")
-     * @param Currency $currency
-     * @param string $date
+     * @Rest\Post("/exchange-rate-by-date")
+     * @ParamConverter("request", class="array", converter="fos_rest.request_body")
+     * @param array $request
      * @return CurrencyExchangeRateDTO|JsonResponse
      */
-    public function getByCurrencyAndDate(Currency $currency, string $date)
+    public function getByCurrencyAndDate(array $request)
     {
-        $dateTime = DateTime::createFromFormat('Y-m-d', $date);
+        $currency = $this->currencyRepository->findOneBy(['id' => $request['currency']]);
+
+        if ($currency === null){
+            return new JsonResponse(['error' => 'Валюта не найдена']);
+        }
+
+        $currencyBase = $this->currencyRepository->findOneBy(['id' => $request['currencyBase']]);
+
+        if ($currencyBase === null){
+            return new JsonResponse(['error' => 'Базовая валюта не найдена']);
+        }
+
+        $dateTime = DateTime::createFromFormat('Y-m-d', $request['date']);
+
+        if ($dateTime === null){
+            return new JsonResponse(['error' => 'Не верный формат даты']);
+        }
 
         $currencyExchangeRates = $this->currencyService->getCurrencyExchangeRatesForDate($dateTime,
-            $currency->getIsoCharCode());
+            $currency, $currencyBase);
 
         if ($currencyExchangeRates === null) {
             return new JsonResponse(['error' => 'Котировки не найдены']);

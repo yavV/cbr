@@ -6,9 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use JMS\Serializer\Annotation\Type;
 
-/**
- * @ORM\MappedSuperclass
- */
 abstract class BaseEntity
 {
     /**
